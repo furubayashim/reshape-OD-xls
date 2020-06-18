@@ -10,19 +10,15 @@ if len(sys.argv) >1:
 else:
     print("enter file name")
 
-output_folder = 'xlsx/'
-if not os.path.exists(output_folder):os.makedirs(output_folder)
-
 df = pd.read_excel(samplefile)
 
-# find "Well" in the sheet and remake data
+# find "Well" in the sheet; store OD data in data_df
 data_index = (df.iloc[:,0] == 'Well').idxmax()
 data_df = df.iloc[data_index+1:-2,1:]
 well_label = df.iloc[data_index,1:].values
 col_label = df.iloc[data_index+1:-2,0].values
 data_df.columns = well_label
 data_df.index = col_label
-data_df
 
 def convert_to_96_sheet(series):
     outdf = pd.DataFrame()
@@ -35,13 +31,12 @@ def convert_to_96_sheet(series):
 
 def save_xls(dict):
     for key,df in dict.items():
-        df.to_excel('{}OD_{}.xlsx'.format(output_folder,key))
+        df.to_excel('OD_{}.xlsx'.format(key))
 
-dict = {}
-
+dict_df = {} # store df of each items (mean, stdev etc) in this dict
 for name,series in data_df.iterrows():
-    dict[name] = convert_to_96_sheet(series)
+    dict_df[name] = convert_to_96_sheet(series)
 
-dict['CV'] = dict['StDev'] / dict['Mean']
+dict_df['CV'] = dict_df['StDev'] / dict_df['Mean']
 
-save_xls(dict)
+save_xls(dict_df)
