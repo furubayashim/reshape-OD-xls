@@ -31,8 +31,17 @@ def convert_to_96_sheet(series):
         d.name = a
         d.index = np.arange(1,13,1)
         outdf = outdf.append(d)
-    outdf.to_excel('{}OD_{}.xlsx'.format(output_folder,series.name))
     return outdf
 
+def save_xls(dict):
+    for key,df in dict.items():
+        df.to_excel('{}OD_{}.xlsx'.format(output_folder,key))
+
+dict = {}
+
 for name,series in data_df.iterrows():
-    convert_to_96_sheet(series)
+    dict[name] = convert_to_96_sheet(series)
+
+dict['CV'] = dict['StDev'] / dict['Mean']
+
+save_xls(dict)
