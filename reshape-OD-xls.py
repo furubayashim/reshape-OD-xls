@@ -17,9 +17,9 @@ df = pd.read_excel(samplefile)
 
 # find "Well" in the sheet and remake data
 data_index = (df.iloc[:,0] == 'Well').idxmax()
-data_df = df.iloc[data_start+1:-2,1:]
+data_df = df.iloc[data_index+1:-2,1:]
 well_label = df.iloc[data_index,1:].values
-col_label = df.iloc[data_start+1:-2,0].values
+col_label = df.iloc[data_index+1:-2,0].values
 data_df.columns = well_label
 data_df.index = col_label
 data_df
